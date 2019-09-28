@@ -1,2 +1,2 @@
-# intro_to_python_solns
-Solutions for Data Science Fundamentals: Intro to Python
+## Solutions for Data Science Fundamentals: Intro to Python
+- Updated after assignments are discussed in class 
