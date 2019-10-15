@@ -61,7 +61,17 @@ class Board():
         symbol. Output a True of False on whether the board was filled at the
         inputted coord.
         """
-        pass
+
+        if not game_check:
+            return False
+
+        good_coord = self._check_coord(coord)
+        if good_coord[-1]:
+            x, y = good_coord[0], good_coord[1]
+            self.board[y][x] = player_symbol
+            return True
+        else:
+            return False
 
     def check_winner(self, player_symbol):
         """
@@ -86,7 +96,30 @@ class Board():
         """
         Print the board in a pretty format.
         """
-        pass
+        # Let's initialize the top row of column numbers first.
+        board_output = '    ' + '   '.join(str(num) for
+                num in range(self.board_size)) + '\n'
+
+        for row_idx, row in enumerate(self.board):
+            board_output += ' {} '.format(row_idx)
+            for col_idx, col in enumerate(row):
+                if col in [' X ', ' O ']:
+                    if col_idx != self.board_size - 1:
+                        board_output += col + '|'
+                    else:
+                        board_output += col
+                else:
+                    if col_idx != self.board_size - 1:
+                        board_output += ' ' * 3 + '|'
+                    else:
+                        board_output += ' ' * 3
+            board_output += '\n'
+            if row_idx != self.board_size - 1:
+                board_output += ' ' * 3
+                board_output += '--' * self.board_size * 2
+                board_output += '\n'
+
+        return board_output
 
 class Player():
     """This docstring will describe the player class and how to interact
@@ -146,7 +179,18 @@ class Game():
 
     def _initialize_players(self):
         """Prompt for two players, asking for names."""
-        pass
+
+        players = []
+        while len(players) < 2:
+            player_name = input("Please enter a name for the first player: ")
+            if not players:
+                player = Player(player_name, ' X ')
+                print("{} will have ' X ' for his/her symbol.".format(player_name))
+            else:
+                player = Player(player_name, ' O ')
+                print("{} will have ' O ' for his/her symbol.".format(player_name))
+            players.append(player)
+        self.players = tuple(players)
 
     def _initialize_board(self):
        """Initialize Board, prompting players for board size."""
@@ -190,7 +234,16 @@ class Game():
 
     def _get_good_coord(self, player):
         """Prompt the current player for coordinate to play."""
-        pass
+        while True:
+            play_prompt = 'Player {} ({}), where will you play? '
+            coord = tuple(input(play_prompt.format(
+                player, player.symbol)).split(', '))
+            game_check = self._check_coord(coord)
+            board_check = self.board.fill_coord(game_check, coord, player.symbol)
+            if game_check and board_check:
+                break
+
+        return True
 
     def _check_coord(self, coord):
         '''
@@ -199,11 +252,26 @@ class Game():
 
         Checks whether or not inputted "coordinates" are well formatted and legal.
         '''
-        pass
+        if len(coord) != 2:
+            print('You need to enter two coordinates. Try again.')
+            return False
+        x, y = coord
+        if x.isdigit() and y.isdigit():
+            x, y = int(x), int(y)
+        else:
+            print('Please enter numbers for coordinates. Try again.')
+            return False
+
+        return True
 
     def _reinitialize(self):
         """Reinitialize the game in order to play again."""
-        pass
+
+        self._initialize_board()
+        self.round += 1
+        self.turn = 0
+        print(self.board)
+        self._play_game()
 
 if __name__ == '__main__':
     game = Game()
