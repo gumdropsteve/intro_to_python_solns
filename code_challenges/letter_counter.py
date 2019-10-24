@@ -2,33 +2,29 @@
 # the output should be in a dictionary 
 
 def letter_counter(path_to_file, letters_to_count):
-    # make a blank dictionary 
+    # create an empty dictionary
     dictionary = {}
-    # add each letter to the dictionary 
+    # go through each letter to count
     for letter in letters_to_count:
-        # with it's current count (i.e. 0)
+        # add each to dictionary 
         dictionary.update({letter : 0})
-
-    # open the file 
-    with open(path_to_file) as f:
-        # go through each line of the file
-        for line in f:
-            # go through each letter and it's count in the dictionary 
-            for key in dictionary:
-                # go through each character in the line 
-                for char in line:
-                    # if the character is the same as the key (letter we are looking for)
-                    if char == key:
-                        # update the count of that letter (key) in the dictionary 
+    # go through each letter in the dictionary
+    for key in dictionary:
+        # open the file 
+        with open(path_to_file) as new_file:
+            # examine each line
+            for line in new_file:
+                # go through each letter in that line
+                for letter in line:
+                    # check if the key is the same as the letter
+                    if letter == key:
+                        # increase the value for that key by 1
                         dictionary[key] += 1
-
-    # once that is all done, output the dictionary
+    # output the results
     return dictionary
 
 
-# if this file is called in terminal 
-if __name__ == '__main__':
-    # run letter_counter on data/test.txt and look for a, b, and c
-    test = letter_counter('data/test.txt', 'abc')
-    # then print the results
+if __name__=='__main__':
+    # run a test
+    test = letter_counter('data/test.txt', 'abcd')
     print(test)
